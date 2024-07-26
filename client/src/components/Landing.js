@@ -27,14 +27,16 @@ const Landing = () => {
             <Text fontSize="lg" mb={6}>
                 Explore our collection of products and enjoy seamless shopping.
             </Text>
-            <Box width="80%" mx="auto" mb={6}>
-                <Slider {...settings}>
-                    {images.map((src, index) => (
-                        <Box key={index}>
-                            <img src={src} alt={`Product ${index + 1}`} style={{ width: "100%", height: "auto" }} />
-                        </Box>
-                    ))}
-                </Slider>
+            <Box width="80%" mx="auto" mb={6} display="flex" justifyContent="center" alignItems="center">
+                <Box width="100%" maxWidth="450px">
+                    <Slider {...settings}>
+                        {images.map((src, index) => (
+                            <Box key={index}>
+                                <img src={src} alt={`Product ${index + 1}`} style={{ width: "100%", height: "auto" }} />
+                            </Box>
+                        ))}
+                    </Slider>
+                </Box>
             </Box>
             <Button colorScheme="teal" size="lg">
                 Shop Now
