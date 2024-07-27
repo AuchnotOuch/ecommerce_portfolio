@@ -1,7 +1,7 @@
-const Product = require('../models/Product');
+import Product, { find, findById } from '../models/Product';
 
 // Add a new product
-exports.addProduct = async (req, res) => {
+export async function addProduct(req, res) {
     const { name, description, price, category, stock } = req.body;
 
     try {
@@ -19,23 +19,23 @@ exports.addProduct = async (req, res) => {
         console.error(err.message);
         res.status(500).send('Server error');
     }
-};
+}
 
 // Get all products
-exports.getProducts = async (req, res) => {
+export async function getProducts(req, res) {
     try {
-        const products = await Product.find();
+        const products = await find();
         res.json(products);
     } catch (err) {
         console.error(err.message);
         res.status(500).send('Server error');
     }
-};
+}
 
 // Get product by ID
-exports.getProductById = async (req, res) => {
+export async function getProductById(req, res) {
     try {
-        const product = await Product.findById(req.params.id);
+        const product = await findById(req.params.id);
 
         if (!product) {
             return res.status(404).json({ msg: 'Product not found' });
@@ -49,4 +49,4 @@ exports.getProductById = async (req, res) => {
         }
         res.status(500).send('Server error');
     }
-};
+}
