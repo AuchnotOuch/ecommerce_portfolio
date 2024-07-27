@@ -1,0 +1,75 @@
+import mongoose from 'mongoose';
+import dotenv from 'dotenv';
+import { faker } from '@faker-js/faker';
+import User from './models/User.js';
+import Product from './models/Product.js';
+import Order from './models/Order.js';
+import connectDB from './config/db.js';
+
+dotenv.config();
+connectDB();
+
+const loadData = async () => {
+    try {
+        await User.deleteMany();
+        await Product.deleteMany();
+        await Order.deleteMany();
+
+        const users = [];
+        const products = [];
+        const orders = [];
+
+        // Create fake users
+        for (let i = 0; i < 10; i++) {
+            const user = new User({
+                name: faker.person.fullName(),
+                email: faker.internet.email(),
+                password: faker.internet.password(),
+            });
+            users.push(user);
+        }
+
+        await User.insertMany(users);
+
+        // Create fake products
+        for (let i = 0; i < 20; i++) {
+            const product = new Product({
+                name: faker.commerce.productName(),
+                description: faker.lorem.sentences(),
+                price: faker.commerce.price(),
+                category: faker.commerce.department(),
+                stock: faker.number.int({ min: 0, max: 100 }),
+                images: [
+                    faker.image.url(),
+                    faker.image.url(),
+                ],
+            });
+            products.push(product);
+        }
+
+        await Product.insertMany(products);
+
+        // Create fake orders
+        for (let i = 0; i < 10; i++) {
+            const order = new Order({
+                user: users[Math.floor(Math.random() * users.length)]._id,
+                products: products.slice(0, Math.floor(Math.random() * products.length)).map(product => ({
+                    product: product._id,
+                    quantity: faker.number.int({ min: 1, max: 5 }),
+                })),
+                totalAmount: faker.commerce.price(),
+            });
+            orders.push(order);
+        }
+
+        await Order.insertMany(orders);
+
+        console.log('Data Loaded!');
+        process.exit();
+    } catch (error) {
+        console.error(`Error: ${error}`);
+        process.exit(1);
+    }
+};
+
+loadData();

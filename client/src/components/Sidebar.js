@@ -82,7 +82,7 @@ const Sidebar = () => {
                             <Link as={RouterLink} to="/" onClick={handleClose}>
                                 Home
                             </Link>
-                            <Link as={RouterLink} to="/shop-all" onClick={handleClose}>
+                            <Link as={RouterLink} to="/all" onClick={handleClose}>
                                 Shop All
                             </Link>
                             <Accordion allowToggle>
