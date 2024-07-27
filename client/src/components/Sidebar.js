@@ -65,7 +65,15 @@ const Sidebar = () => {
                 preserveScrollBarGap
             >
                 <DrawerOverlay />
-                <DrawerContent bg="rgba(255, 255, 255, 0.5)" backdropFilter="blur(10px)" zIndex="3000" color="white">
+                <DrawerContent
+                    bg="rgba(255, 255, 255, 0.1)"
+                    backdropFilter="blur(10px)"
+                    zIndex="3000"
+                    color="white"
+                    borderRadius="15px" // Added border radius for softer edges
+                    mx="2" // Added margin to the sides to make the border radius visible
+                    my="4" // Added margin to the top and bottom to make the border radius visible
+                >
                     <DrawerCloseButton onClick={handleClose} />
                     <DrawerHeader>Navigation</DrawerHeader>
 

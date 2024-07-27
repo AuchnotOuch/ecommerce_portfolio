@@ -22,16 +22,16 @@ const Landing = () => {
     return (
         <Box textAlign="center" py={10} px={6}>
             <Heading as="h2" size="xl" mb={4}>
-                Welcome to Our E-commerce Site!
+                EcoSphere
             </Heading>
             <Text fontSize="lg" mb={6}>
-                Explore our collection of products and enjoy seamless shopping.
+                Explore our collection of products.
             </Text>
             <Box width="80%" mx="auto" mb={6} display="flex" justifyContent="center" alignItems="center">
                 <Box width="100%" maxWidth="450px">
                     <Slider {...settings}>
                         {images.map((src, index) => (
-                            <Box key={index}>
+                            <Box key={index} borderRadius="15px" overflow="hidden">
                                 <img src={src} alt={`Product ${index + 1}`} style={{ width: "100%", height: "auto" }} />
                             </Box>
                         ))}
