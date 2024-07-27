@@ -1,9 +1,10 @@
-const User = require('../models/User');
-const bcrypt = require('bcryptjs');
-const jwt = require('jsonwebtoken');
+import User from '../models/User.js';
+import pkg from 'bcryptjs';
+import jwt from 'jsonwebtoken';
+const { genSalt, hash, compare } = pkg;
 
 // Register a new user
-exports.registerUser = async (req, res) => {
+export async function registerUser(req, res) {
     const { name, email, password } = req.body;
 
     try {
@@ -19,8 +20,8 @@ exports.registerUser = async (req, res) => {
             password,
         });
 
-        const salt = await bcrypt.genSalt(10);
-        user.password = await bcrypt.hash(password, salt);
+        const salt = await genSalt(10);
+        user.password = await hash(password, salt);
 
         await user.save();
 
@@ -43,10 +44,10 @@ exports.registerUser = async (req, res) => {
         console.error(err.message);
         res.status(500).send('Server error');
     }
-};
+}
 
 // Login a user
-exports.loginUser = async (req, res) => {
+export async function loginUser(req, res) {
     const { email, password } = req.body;
 
     try {
@@ -56,7 +57,7 @@ exports.loginUser = async (req, res) => {
             return res.status(400).json({ msg: 'Invalid Credentials' });
         }
 
-        const isMatch = await bcrypt.compare(password, user.password);
+        const isMatch = await compare(password, user.password);
 
         if (!isMatch) {
             return res.status(400).json({ msg: 'Invalid Credentials' });
@@ -81,4 +82,4 @@ exports.loginUser = async (req, res) => {
         console.error(err.message);
         res.status(500).send('Server error');
     }
-};
+}

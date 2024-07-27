@@ -1,7 +1,9 @@
-import express, { json } from 'express';
-import connectDB from './config/db';
+import express from 'express';
+import connectDB from './config/db.js';
 import cors from 'cors';
-require('dotenv').config();
+import dotenv from 'dotenv';
+
+dotenv.config(); // Load environment variables
 
 const app = express();
 
@@ -9,13 +11,17 @@ const app = express();
 connectDB();
 
 // Init Middleware
-app.use(json({ extended: false }));
+app.use(express.json({ extended: false }));
 app.use(cors());
 
 // Define Routes
-app.use('/api/users', require('./routes/user').default);
-app.use('/api/products', require('./routes/product').default);
-app.use('/api/orders', require('./routes/order'));
+import userRoutes from './routes/user.js';
+import productRoutes from './routes/product.js';
+import orderRoutes from './routes/order.js';
+
+app.use('/api/users', userRoutes);
+app.use('/api/products', productRoutes);
+app.use('/api/orders', orderRoutes);
 
 const PORT = process.env.PORT || 5000;
 

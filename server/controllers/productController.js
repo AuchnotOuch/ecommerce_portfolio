@@ -1,4 +1,4 @@
-import Product, { find, findById } from '../models/Product';
+import Product from '../models/Product.js';
 
 // Add a new product
 export async function addProduct(req, res) {
