@@ -3,25 +3,25 @@ import connectDB from './config/db.js';
 import cors from 'cors';
 import dotenv from 'dotenv';
 
-dotenv.config(); // Load environment variables
+dotenv.config();
+connectDB();
 
 const app = express();
 
-// Connect Database
-connectDB();
-
-// Init Middleware
-app.use(express.json({ extended: false }));
+// Middleware
 app.use(cors());
+app.use(express.json());
 
-// Define Routes
+// Routes
 import userRoutes from './routes/user.js';
 import productRoutes from './routes/product.js';
 import orderRoutes from './routes/order.js';
+import reviewRoutes from './routes/review.js';
 
 app.use('/api/users', userRoutes);
 app.use('/api/products', productRoutes);
 app.use('/api/orders', orderRoutes);
+app.use('/api/reviews', reviewRoutes);
 
 const PORT = process.env.PORT || 5000;
 

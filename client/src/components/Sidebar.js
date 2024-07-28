@@ -20,22 +20,20 @@ import {
     VStack,
 } from '@chakra-ui/react';
 import { HamburgerIcon } from '@chakra-ui/icons';
-import { Link as RouterLink } from 'react-router-dom';
+import { Link as RouterLink, useNavigate } from 'react-router-dom';
 
 const Sidebar = () => {
     const { isOpen, onOpen, onClose } = useDisclosure();
     const btnRef = React.useRef();
+    const navigate = useNavigate();
 
-    // State to control the visibility of the menu button
     const [isButtonVisible, setButtonVisible] = useState(true);
 
-    // Function to handle opening the drawer
     const handleOpen = () => {
         onOpen();
         setButtonVisible(false);
     };
 
-    // Function to handle closing the drawer
     const handleClose = () => {
         onClose();
         setButtonVisible(true);
@@ -46,33 +44,32 @@ const Sidebar = () => {
             {isButtonVisible && (
                 <Button
                     ref={btnRef}
-                    colorScheme="teal"
                     onClick={handleOpen}
                     position="fixed"
                     top="1rem"
-                    left="1rem"
+                    right="1rem"
                     zIndex="2000"
+                    background='none'
                 >
                     <HamburgerIcon />
                 </Button>
             )}
             <Drawer
                 isOpen={isOpen}
-                placement="left"
+                placement="right"
                 onClose={handleClose}
                 finalFocusRef={btnRef}
-                returnFocusOnClose={false}
-                preserveScrollBarGap
+
             >
                 <DrawerOverlay />
                 <DrawerContent
                     bg="rgba(255, 255, 255, 0.1)"
-                    backdropFilter="blur(10px)"
                     zIndex="3000"
                     color="white"
-                    borderRadius="15px" // Added border radius for softer edges
-                    mx="2" // Added margin to the sides to make the border radius visible
-                    my="4" // Added margin to the top and bottom to make the border radius visible
+                    borderRadius="15px"
+                    mx="2"
+                    my="4"
+                    backdropFilter="blur(10px)"
                 >
                     <DrawerCloseButton onClick={handleClose} />
                     <DrawerHeader>Navigation</DrawerHeader>
@@ -117,7 +114,7 @@ const Sidebar = () => {
                             <Link as={RouterLink} to="/cart" onClick={handleClose}>
                                 View Cart
                             </Link>
-                            <Link as={RouterLink} to="/sign-in" onClick={handleClose}>
+                            <Link as={RouterLink} to="/signin" onClick={handleClose}>
                                 Sign In
                             </Link>
                             <Link as={RouterLink} to="/privacy" onClick={handleClose}>

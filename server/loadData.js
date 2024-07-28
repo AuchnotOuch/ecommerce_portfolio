@@ -44,6 +44,28 @@ const loadData = async () => {
                     faker.image.url(),
                 ],
             });
+
+            // Generate fake reviews for the product
+            const reviews = [];
+            const numReviews = faker.number.int({ min: 0, max: 10 });
+            let ratingSum = 0;
+
+            for (let j = 0; j < numReviews; j++) {
+                const review = {
+                    user: users[Math.floor(Math.random() * users.length)]._id,
+                    name: faker.person.fullName(),
+                    rating: faker.number.int({ min: 1, max: 5 }),
+                    comment: faker.lorem.sentence(),
+                    date: faker.date.recent(),
+                };
+                reviews.push(review);
+                ratingSum += review.rating;
+            }
+
+            product.reviews = reviews;
+            product.numReviews = numReviews;
+            product.rating = numReviews > 0 ? ratingSum / numReviews : 0;
+
             products.push(product);
         }
 
