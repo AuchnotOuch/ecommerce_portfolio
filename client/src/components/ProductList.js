@@ -41,7 +41,7 @@ const ProductList = ({ category }) => {
 
     return (
         <Box>
-            <Heading as="h2" size="lg" mb={4} textAlign='center'>
+            <Heading color='white' as="h2" size="lg" mb={4} textAlign='center'>
                 {category ? `Products in ${category}` : 'All Products'}
             </Heading>
             <SimpleGrid columns={[1, 2, 3]} spacing="5px">

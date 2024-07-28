@@ -5,8 +5,8 @@ import { Link as RouterLink } from 'react-router-dom';
 const Product = ({ product }) => {
     return (
         <Link as={RouterLink} to={`/product/${product._id}`} style={{ textDecoration: 'none' }}>
-            <Box borderWidth="1px" borderRadius="lg" overflow="hidden" p={4} m={2} position="relative" maxHeight='400px' bg="rgba(255, 255, 255, 0.1)" backdropFilter="blur(10px)">
-                <Badge position="absolute" top="10px" right="10px" colorScheme="teal">
+            <Box color="white" borderRadius="lg" overflow="hidden" p={4} m={2} position="relative" maxHeight='400px' bg="rgba(255, 255, 255, 0.1)" backdropFilter="blur(10px)">
+                <Badge position="absolute" top="10px" right="10px">
                     ${product.price.toFixed(2)}
                 </Badge>
                 <Box display="flex" alignItems="center" justifyContent="center" height="200px" borderRadius="lg" width="100%" mb={2}>
