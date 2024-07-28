@@ -1,12 +1,12 @@
 import React, { useState, useEffect, useContext } from 'react';
 import {
-    Box, Button, Drawer, DrawerBody, DrawerHeader, DrawerOverlay, DrawerContent, DrawerCloseButton,
-    useDisclosure, Accordion, AccordionItem, AccordionButton, AccordionPanel, AccordionIcon,
-    List, ListItem, Link, VStack
+    Box, Button, Drawer, DrawerBody, DrawerOverlay, DrawerContent, DrawerCloseButton,
+    useDisclosure, List, ListItem, Link, VStack, Text
 } from '@chakra-ui/react';
 import { HamburgerIcon } from '@chakra-ui/icons';
 import { Link as RouterLink, useNavigate } from 'react-router-dom';
 import { AuthContext } from '../context/AuthContext';
+import axios from 'axios';
 
 const Sidebar = () => {
     const { isOpen, onOpen, onClose } = useDisclosure();
@@ -14,6 +14,20 @@ const Sidebar = () => {
     const navigate = useNavigate();
     const [isButtonVisible, setButtonVisible] = useState(true);
     const { token, logout } = useContext(AuthContext);
+    const [categories, setCategories] = useState([]);
+
+    useEffect(() => {
+        const fetchCategories = async () => {
+            try {
+                const response = await axios.get('/api/products/categories');
+                setCategories(response.data);
+            } catch (error) {
+                console.error('Error fetching categories:', error);
+            }
+        };
+
+        fetchCategories();
+    }, []);
 
     const handleOpen = () => {
         onOpen();
@@ -40,28 +54,11 @@ const Sidebar = () => {
             )}
             <Drawer isOpen={isOpen} placement="right" onClose={handleClose} finalFocusRef={btnRef}>
                 <DrawerOverlay />
-                <DrawerContent bg="rgba(255, 255, 255, 0.1)" zIndex="3000" color="white" borderRadius="15px" mx="2" my="4" backdropFilter="blur(10px)">
+                <DrawerContent bg="rgba(255, 255, 255, 0.1)" zIndex="3000" color="white" borderRadius="15px" mx="2" my="4" backdropFilter="blur(10px)" minHeight="fit-content">
                     <DrawerCloseButton onClick={handleClose} />
-                    <DrawerHeader>Navigation</DrawerHeader>
-                    <DrawerBody>
+                    <DrawerBody overflowY="auto">
                         <VStack spacing={4} align="stretch">
                             <Link as={RouterLink} to="/" onClick={handleClose}>Home</Link>
-                            <Link as={RouterLink} to="/all" onClick={handleClose}>Shop All</Link>
-                            <Accordion allowToggle>
-                                <AccordionItem>
-                                    <AccordionButton>
-                                        <Box flex="1" textAlign="left">Shop by Category</Box>
-                                    </AccordionButton>
-                                    <AccordionIcon />
-                                    <AccordionPanel pb={4}>
-                                        <List spacing={2}>
-                                            <ListItem><Link as={RouterLink} to="/category/category1" onClick={handleClose}>Category 1</Link></ListItem>
-                                            <ListItem><Link as={RouterLink} to="/category/category2" onClick={handleClose}>Category 2</Link></ListItem>
-                                            <ListItem><Link as={RouterLink} to="/category/category3" onClick={handleClose}>Category 3</Link></ListItem>
-                                        </List>
-                                    </AccordionPanel>
-                                </AccordionItem>
-                            </Accordion>
                             <Link as={RouterLink} to="/cart" onClick={handleClose}>View Cart</Link>
                             {token && <Link as={RouterLink} to="/orders" onClick={handleClose}>View Orders</Link>}
                             {token ? (
@@ -69,7 +66,21 @@ const Sidebar = () => {
                             ) : (
                                 <Link as={RouterLink} to="/signin" onClick={handleClose}>Sign In</Link>
                             )}
-                            <Link as={RouterLink} to="/privacy" onClick={handleClose}>Privacy Info</Link>
+                            <Link as={RouterLink} to="/all" onClick={handleClose}>Shop All</Link>
+                            <Box flex="1" textAlign="left" textDecoration="underline">Shop By Category</Box>
+                            <List spacing={2}>
+                                {categories.length > 0 ? (
+                                    categories.map((category) => (
+                                        <ListItem key={category}>
+                                            <Link as={RouterLink} to={`/category/${category}`} onClick={handleClose}>
+                                                {category}
+                                            </Link>
+                                        </ListItem>
+                                    ))
+                                ) : (
+                                    <Text>No categories found</Text>
+                                )}
+                            </List>
                         </VStack>
                     </DrawerBody>
                 </DrawerContent>

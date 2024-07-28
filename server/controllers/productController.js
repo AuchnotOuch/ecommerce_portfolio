@@ -68,3 +68,14 @@ export const getRelatedProducts = async (req, res) => {
         res.status(500).send('Server error');
     }
 };
+
+// Get unique product categories
+export const getCategories = async (req, res) => {
+    try {
+        const categories = await Product.distinct("category");
+        res.json(categories);
+    } catch (err) {
+        console.error(err.message);
+        res.status(500).send('Server error');
+    }
+};

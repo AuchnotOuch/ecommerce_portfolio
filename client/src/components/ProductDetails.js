@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useContext } from 'react';
 import { useParams } from 'react-router-dom';
-import { Box, Image, Text, Spinner, Heading, FormControl, FormLabel, Textarea, Button, Select, VStack, useToast } from '@chakra-ui/react';
+import { Box, Image, Text, Spinner, Heading, FormControl, FormLabel, Textarea, Button, Select, useToast } from '@chakra-ui/react';
 import axios from 'axios';
 import { CartContext } from '../context/CartContext';
 import { AuthContext } from '../context/AuthContext';
@@ -14,7 +14,7 @@ const ProductDetails = () => {
     const [reviewLoading, setReviewLoading] = useState(false);
     const [error, setError] = useState(null);
     const { addToCart } = useContext(CartContext);
-    const { token } = useContext(AuthContext);
+    const { token, loggedInCheck } = useContext(AuthContext);
     const [quantity, setQuantity] = useState(1);
     const toast = useToast();
 
@@ -73,7 +73,7 @@ const ProductDetails = () => {
     }
 
     return (
-        <Box p={6}>
+        <Box color="white" p={6}>
             <Heading as="h2" size="xl" mb={4}>{product.name}</Heading>
             <Box display="flex" justifyContent="center" mb={4}>
                 <Image src={product.images[0]} alt={product.name} boxSize="400px" objectFit="cover" />
@@ -106,25 +106,27 @@ const ProductDetails = () => {
                 ))}
             </Box>
 
-            <Box mt={6}>
-                <Heading as="h3" size="lg" mb={4}>Add a Review</Heading>
-                {error && <Text color="red.500">{error}</Text>}
-                <FormControl id="rating" mb={4}>
-                    <FormLabel>Rating</FormLabel>
-                    <Select value={rating} onChange={(e) => setRating(Number(e.target.value))}>
-                        <option value="1">1 - Poor</option>
-                        <option value="2">2 - Fair</option>
-                        <option value="3">3 - Good</option>
-                        <option value="4">4 - Very Good</option>
-                        <option value="5">5 - Excellent</option>
-                    </Select>
-                </FormControl>
-                <FormControl id="comment" mb={4}>
-                    <FormLabel>Comment</FormLabel>
-                    <Textarea value={comment} onChange={(e) => setComment(e.target.value)} />
-                </FormControl>
-                <Button colorScheme="teal" onClick={submitReview} isLoading={reviewLoading}>Submit Review</Button>
-            </Box>
+            {loggedInCheck() && (
+                <Box mt={6}>
+                    <Heading as="h3" size="lg" mb={4}>Add a Review</Heading>
+                    {error && <Text color="red.500">{error}</Text>}
+                    <FormControl id="rating" mb={4}>
+                        <FormLabel>Rating</FormLabel>
+                        <Select value={rating} onChange={(e) => setRating(Number(e.target.value))}>
+                            <option value="1">1 - Poor</option>
+                            <option value="2">2 - Fair</option>
+                            <option value="3">3 - Good</option>
+                            <option value="4">4 - Very Good</option>
+                            <option value="5">5 - Excellent</option>
+                        </Select>
+                    </FormControl>
+                    <FormControl id="comment" mb={4}>
+                        <FormLabel>Comment</FormLabel>
+                        <Textarea value={comment} onChange={(e) => setComment(e.target.value)} />
+                    </FormControl>
+                    <Button colorScheme="teal" onClick={submitReview} isLoading={reviewLoading}>Submit Review</Button>
+                </Box>
+            )}
         </Box>
     );
 };
