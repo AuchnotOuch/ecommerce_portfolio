@@ -32,12 +32,13 @@ const loadData = async () => {
         await User.insertMany(users);
 
         // Create fake products
-        for (let i = 0; i < 20; i++) {
+        const categories = ['Games', 'Books', 'Electronics', 'Clothing', 'Furniture', 'Toys', 'Groceries', 'Beauty', 'Automotive', 'Sports'];
+        for (let i = 0; i < 100; i++) {
             const product = new Product({
                 name: faker.commerce.productName(),
                 description: faker.lorem.sentences(),
                 price: faker.commerce.price(),
-                category: faker.commerce.department(),
+                category: categories[Math.floor(Math.random() * categories.length)],
                 stock: faker.number.int({ min: 0, max: 100 }),
                 images: [
                     faker.image.url(),

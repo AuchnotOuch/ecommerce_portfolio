@@ -51,3 +51,20 @@ export const getProductById = async (req, res) => {
         res.status(500).send('Server error');
     }
 };
+
+// Find related products
+export const getRelatedProducts = async (req, res) => {
+    const { categories } = req.query;
+    if (!categories) {
+        return res.status(400).json({ msg: 'Categories query parameter is required' });
+    }
+
+    try {
+        const categoryArray = categories.split(',');
+        const relatedProducts = await Product.find({ category: { $in: categoryArray } }).limit(6);
+        res.json(relatedProducts);
+    } catch (err) {
+        console.error(err.message);
+        res.status(500).send('Server error');
+    }
+};

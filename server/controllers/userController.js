@@ -28,6 +28,7 @@ export async function registerUser(req, res) {
         const payload = {
             user: {
                 id: user.id,
+                name: user.name, // Include the name in the payload
             },
         };
 
@@ -62,10 +63,11 @@ export async function loginUser(req, res) {
         if (!isMatch) {
             return res.status(400).json({ msg: 'Invalid Credentials' });
         }
-
+        console.log(user)
         const payload = {
             user: {
                 id: user.id,
+                name: user.name
             },
         };
 
@@ -75,7 +77,7 @@ export async function loginUser(req, res) {
             { expiresIn: 360000 },
             (err, token) => {
                 if (err) throw err;
-                res.json({ token });
+                res.json({ token, user });
             }
         );
     } catch (err) {
@@ -83,3 +85,8 @@ export async function loginUser(req, res) {
         res.status(500).send('Server error');
     }
 }
+
+// Get Current User
+// export async function getUser(req, res) {
+//     const {}
+// }

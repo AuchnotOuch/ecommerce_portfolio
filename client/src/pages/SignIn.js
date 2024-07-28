@@ -1,75 +1,61 @@
-import React, { useState } from 'react';
-import {
-    Box,
-    Button,
-    FormControl,
-    FormLabel,
-    Input,
-    Heading,
-    useToast,
-    VStack,
-} from '@chakra-ui/react';
+import React, { useState, useContext } from 'react';
+import { Box, Button, Input, VStack, Heading, Text, useToast } from '@chakra-ui/react';
+import { AuthContext } from '../context/AuthContext';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 
 const SignIn = () => {
+    const { login } = useContext(AuthContext);
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
-    const [loading, setLoading] = useState(false);
     const toast = useToast();
     const navigate = useNavigate();
-
-    const handleSignIn = async () => {
-        setLoading(true);
+    console.log(login)
+    const handleSubmit = async (e) => {
+        e.preventDefault();
         try {
-            const response = await axios.post('/api/users/login', { email, password });
-            localStorage.setItem('token', response.data.token);
+            const res = await axios.post('/api/users/login', { email, password });
+            console.log(res)
+            login(res.data.user, res.data.token);
             toast({
-                title: "Signed in successfully.",
+                title: "Signed in successfully",
                 status: "success",
                 duration: 3000,
                 isClosable: true,
             });
-            navigate('/all');
-        } catch (error) {
+            navigate('/');
+        } catch (err) {
             toast({
-                title: "Error signing in.",
-                description: error.response?.data?.msg || "Something went wrong.",
+                title: "Error signing in",
+                description: err.response?.data?.msg || "Something went wrong",
                 status: "error",
                 duration: 3000,
                 isClosable: true,
             });
-        } finally {
-            setLoading(false);
         }
     };
 
     return (
-        <Box maxW="md" mx="auto" mt={10}>
-            <Heading as="h1" mb={6}>Sign In</Heading>
-            <VStack spacing={4} align="stretch">
-                <FormControl id="sign-in-email" mb={4}>
-                    <FormLabel>Email address</FormLabel>
-                    <Input
-                        type="email"
-                        value={email}
-                        onChange={(e) => setEmail(e.target.value)}
-                        autoComplete="email"
-                    />
-                </FormControl>
-                <FormControl id="sign-in-password">
-                    <FormLabel>Password</FormLabel>
-                    <Input
-                        type="password"
-                        value={password}
-                        onChange={(e) => setPassword(e.target.value)}
-                        autoComplete="current-password"
-                    />
-                </FormControl>
-                <Button colorScheme="teal" onClick={handleSignIn} isLoading={loading}>
-                    Sign In
-                </Button>
-                <Button variant="link" onClick={() => navigate('/signup')}>Don't have an account? Sign Up</Button>
+        <Box p={6} maxWidth="400px" mx="auto">
+            <Heading as="h2" size="xl" mb={4}>Sign In</Heading>
+            <VStack as="form" spacing={4} align="stretch" onSubmit={handleSubmit}>
+                <Input
+                    placeholder="Email"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    required
+                />
+                <Input
+                    placeholder="Password"
+                    type="password"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    required
+                />
+                <Button type="submit" colorScheme="teal" size="lg">Sign In</Button>
+                <Text>
+                    Don't have an account? <a href="/signup">Sign Up</a>
+                </Text>
             </VStack>
         </Box>
     );

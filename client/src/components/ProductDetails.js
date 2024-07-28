@@ -1,16 +1,21 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useContext } from 'react';
 import { useParams } from 'react-router-dom';
-import { Box, Image, Text, Spinner, Heading, FormControl, FormLabel, Textarea, Button, Select } from '@chakra-ui/react';
+import { Box, Image, Text, Spinner, Heading, FormControl, FormLabel, Textarea, Button, Select, VStack } from '@chakra-ui/react';
 import axios from 'axios';
+import { CartContext } from '../context/CartContext';
+import { AuthContext } from '../context/AuthContext';
 
 const ProductDetails = () => {
     const { id } = useParams();
     const [product, setProduct] = useState(null);
     const [loading, setLoading] = useState(true);
-    const [rating, setRating] = useState(0);
+    const [rating, setRating] = useState(1);
     const [comment, setComment] = useState('');
     const [reviewLoading, setReviewLoading] = useState(false);
     const [error, setError] = useState(null);
+    const { dispatch } = useContext(CartContext);
+    const { token } = useContext(AuthContext);
+    const [quantity, setQuantity] = useState(1);
 
     useEffect(() => {
         const fetchProduct = async () => {
@@ -30,23 +35,25 @@ const ProductDetails = () => {
     const submitReview = async () => {
         setReviewLoading(true);
         try {
-            const token = localStorage.getItem('token');
-            const response = await axios.post(`/api/reviews/${id}`, { rating, comment }, {
+            await axios.post(`/api/reviews/${id}`, { rating, comment }, {
                 headers: {
                     Authorization: `Bearer ${token}`
                 }
             });
             setComment('');
             setRating(0);
-            // Refetch product details to show the new review
-            const updatedProduct = await axios.get(`/api/products/${id}`);
-            setProduct(updatedProduct.data);
+            const response = await axios.get(`/api/products/${id}`);
+            setProduct(response.data);
         } catch (error) {
             console.error('Error submitting review:', error);
             setError('Error submitting review');
         } finally {
             setReviewLoading(false);
         }
+    };
+
+    const addToCart = () => {
+        dispatch({ type: 'ADD_TO_CART', payload: { product, quantity } });
     };
 
     if (loading) {
@@ -59,19 +66,29 @@ const ProductDetails = () => {
 
     return (
         <Box p={6}>
-            <Heading as="h2" size="xl" mb={4}>{product.name}</Heading>
-            <Box display="flex" justifyContent="center" mb={4}>
+            <Heading as="h2" size="xl" mb={4}>{product.name}</Heading>        <Box display="flex" justifyContent="center" mb={4}>
                 <Image src={product.images[0]} alt={product.name} boxSize="400px" objectFit="cover" />
             </Box>
             <Text fontSize="xl" mb={4}>{product.description}</Text>
             <Text fontSize="2xl" fontWeight="bold">${product.price.toFixed(2)}</Text>
-            <Text mt={4}>Rating: {product.rating} ({product.numReviews} reviews)</Text>
+
+            <FormControl id="quantity" mb={4} w="100px">
+                <FormLabel>Quantity</FormLabel>
+                <Select value={quantity} onChange={(e) => setQuantity(Number(e.target.value))}>
+                    {[...Array(10).keys()].map(x => (
+                        <option key={x + 1} value={x + 1}>{x + 1}</option>
+                    ))}
+                </Select>
+            </FormControl>
+
+            <Button onClick={addToCart}>Add to Cart</Button>
+            <Text mt={4}>Rating: {product.rating.toFixed(2)} ({product.numReviews} reviews)</Text>
 
             <Box mt={6}>
                 <Heading as="h3" size="lg" mb={4}>Reviews</Heading>
                 {product.reviews.length === 0 && <Text>No reviews yet</Text>}
                 {product.reviews.map((review) => (
-                    <Box key={review._id} borderWidth="1px" borderRadius="lg" p={4} mb={4}>
+                    <Box bg="rgba(255, 255, 255, 0.1)" key={review._id} borderRadius="lg" p={4} mb={4}>
                         <Text fontWeight="bold">{review.name}</Text>
                         <Text>Rating: {review.rating}</Text>
                         <Text>{review.comment}</Text>

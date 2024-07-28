@@ -1,3 +1,4 @@
+// index.js
 import express from 'express';
 import connectDB from './config/db.js';
 import cors from 'cors';
@@ -17,11 +18,13 @@ import userRoutes from './routes/user.js';
 import productRoutes from './routes/product.js';
 import orderRoutes from './routes/order.js';
 import reviewRoutes from './routes/review.js';
+import cartRoutes from './routes/cart.js';
 
 app.use('/api/users', userRoutes);
 app.use('/api/products', productRoutes);
 app.use('/api/orders', orderRoutes);
 app.use('/api/reviews', reviewRoutes);
+app.use('/api/cart', cartRoutes);
 
 const PORT = process.env.PORT || 5000;
 

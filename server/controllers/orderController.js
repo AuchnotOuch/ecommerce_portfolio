@@ -2,11 +2,11 @@ import Order from '../models/Order.js';
 
 // Place a new order
 export async function placeOrder(req, res) {
-    const { user, products, totalAmount } = req.body;
+    const { products, totalAmount } = req.body;
 
     try {
         const newOrder = new Order({
-            user,
+            user: req.user.id,
             products,
             totalAmount,
         });
@@ -22,8 +22,8 @@ export async function placeOrder(req, res) {
 // Get orders by user ID
 export async function getOrdersByUserId(req, res) {
     try {
-        const orders = await find({ user: req.params.userId }).populate('products.product');
-
+        const orders = await Order.find({ user: req.user.id }).populate('products.product');
+        console.log(orders)
         if (!orders) {
             return res.status(404).json({ msg: 'No orders found' });
         }
