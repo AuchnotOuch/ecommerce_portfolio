@@ -1,4 +1,3 @@
-// Cart.js
 import React, { useContext } from 'react';
 import { Box, Heading, Text, Button, Image, VStack, HStack, Link } from '@chakra-ui/react';
 import { CartContext } from '../context/CartContext';
@@ -7,7 +6,7 @@ import { Link as RouterLink } from 'react-router-dom';
 
 const Cart = () => {
     const { cart, dispatch } = useContext(CartContext);
-    const { isAuthenticated } = useContext(AuthContext);
+    const { token } = useContext(AuthContext);
 
     const handleRemove = (productId) => {
         dispatch({ type: 'REMOVE_FROM_CART', payload: productId });
@@ -23,7 +22,7 @@ const Cart = () => {
             ) : (
                 <VStack spacing={4}>
                     {cart.map(item => (
-                        <Box color="white" key={item.product._id} borderWidth="1px" borderRadius="lg" p={4} w="100%">
+                        <Box bg="rgba(255, 255, 255, 0.1)" color="white" key={item.product._id} borderRadius="lg" p={4} w="100%">
                             <HStack>
                                 <Image src={item.product.images[0]} alt={item.product.name} boxSize="100px" />
                                 <VStack align="start">
@@ -40,23 +39,36 @@ const Cart = () => {
             )}
             <Text color='white' fontSize="xl" fontWeight="bold" mt={4}>Total: ${totalAmount.toFixed(2)}</Text>
             {totalAmount === 0 ? (
-                <Link to='/all'><Button>Add Products</Button></Link>
+                <Link as={RouterLink} to='/all'><Button>Add Products</Button></Link>
             ) : (
                 <>
-                    <Button
-                        color="white"
-                        as={RouterLink}
-                        bg="none"
-                        border='1px'
-                        borderColor="white"
-                        to="/checkout"
-                        size="lg"
-                        mt={6}
-                        disabled={!isAuthenticated}
-                    >
-                        Proceed to Checkout
-                    </Button>
-                    {!isAuthenticated && <Text color="white" mt={2}>Please login to proceed to checkout.</Text>}
+                    {token ? (
+                        <Button
+                            color="white"
+                            as={RouterLink}
+                            bg="none"
+                            border='1px'
+                            borderColor="white"
+                            to="/checkout"
+                            size="lg"
+                            mt={6}
+                        >
+                            Proceed to Checkout
+                        </Button>
+                    ) : (
+                        <Button
+                            color="white"
+                            as={RouterLink}
+                            bg="none"
+                            border='1px'
+                            borderColor="white"
+                            to="/signin"
+                            size="lg"
+                            mt={6}
+                        >
+                            Proceed to Login to Checkout
+                        </Button>
+                    )}
                 </>
             )}
         </Box>

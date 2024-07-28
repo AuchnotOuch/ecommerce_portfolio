@@ -6,7 +6,7 @@ import axios from 'axios';
 import { useNavigate, Link as RouterLink } from 'react-router-dom';
 
 const Checkout = () => {
-    const { cart, dispatch } = useContext(CartContext);
+    const { cart, clearCart, addToCart } = useContext(CartContext);
     const { token } = useContext(AuthContext);
     const [name, setName] = useState('');
     const [cardNumber, setCardNumber] = useState('');
@@ -60,7 +60,8 @@ const Checkout = () => {
                     Authorization: `Bearer ${token}`
                 }
             });
-            dispatch({ type: 'SET_CART', payload: [] });
+
+            clearCart()
             toast({
                 title: "Order placed",
                 description: "Your order has been successfully placed.",
@@ -84,7 +85,7 @@ const Checkout = () => {
     };
 
     const handleAddToCart = (product) => {
-        dispatch({ type: 'ADD_TO_CART', payload: { product, quantity: 1 } });
+        addToCart(product)
         toast({
             title: "Added to cart",
             description: `${product.name} has been added to your cart.`,

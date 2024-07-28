@@ -27,8 +27,16 @@ export const AuthProvider = ({ children }) => {
         localStorage.removeItem('token');
     };
 
+    const loggedInCheck = () => {
+        if (localStorage.getItem("token")) {
+            return true
+        } else {
+            return false
+        }
+    }
+
     return (
-        <AuthContext.Provider value={{ user, token, login, logout }}>
+        <AuthContext.Provider value={{ user, token, login, logout, loggedInCheck }}>
             {children}
         </AuthContext.Provider>
     );

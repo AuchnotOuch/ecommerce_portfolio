@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useContext } from 'react';
 import { useParams } from 'react-router-dom';
-import { Box, Image, Text, Spinner, Heading, FormControl, FormLabel, Textarea, Button, Select, VStack } from '@chakra-ui/react';
+import { Box, Image, Text, Spinner, Heading, FormControl, FormLabel, Textarea, Button, Select, VStack, useToast } from '@chakra-ui/react';
 import axios from 'axios';
 import { CartContext } from '../context/CartContext';
 import { AuthContext } from '../context/AuthContext';
@@ -13,9 +13,10 @@ const ProductDetails = () => {
     const [comment, setComment] = useState('');
     const [reviewLoading, setReviewLoading] = useState(false);
     const [error, setError] = useState(null);
-    const { dispatch } = useContext(CartContext);
+    const { addToCart } = useContext(CartContext);
     const { token } = useContext(AuthContext);
     const [quantity, setQuantity] = useState(1);
+    const toast = useToast();
 
     useEffect(() => {
         const fetchProduct = async () => {
@@ -41,7 +42,7 @@ const ProductDetails = () => {
                 }
             });
             setComment('');
-            setRating(0);
+            setRating(1);
             const response = await axios.get(`/api/products/${id}`);
             setProduct(response.data);
         } catch (error) {
@@ -52,8 +53,15 @@ const ProductDetails = () => {
         }
     };
 
-    const addToCart = () => {
-        dispatch({ type: 'ADD_TO_CART', payload: { product, quantity } });
+    const handleAddToCart = () => {
+        addToCart({ product, quantity });
+        toast({
+            title: "Added to cart",
+            description: `${product.name} has been added to your cart.`,
+            status: "success",
+            duration: 3000,
+            isClosable: true,
+        });
     };
 
     if (loading) {
@@ -66,7 +74,8 @@ const ProductDetails = () => {
 
     return (
         <Box p={6}>
-            <Heading as="h2" size="xl" mb={4}>{product.name}</Heading>        <Box display="flex" justifyContent="center" mb={4}>
+            <Heading as="h2" size="xl" mb={4}>{product.name}</Heading>
+            <Box display="flex" justifyContent="center" mb={4}>
                 <Image src={product.images[0]} alt={product.name} boxSize="400px" objectFit="cover" />
             </Box>
             <Text fontSize="xl" mb={4}>{product.description}</Text>
@@ -81,7 +90,7 @@ const ProductDetails = () => {
                 </Select>
             </FormControl>
 
-            <Button onClick={addToCart}>Add to Cart</Button>
+            <Button onClick={handleAddToCart}>Add to Cart</Button>
             <Text mt={4}>Rating: {product.rating.toFixed(2)} ({product.numReviews} reviews)</Text>
 
             <Box mt={6}>
@@ -102,7 +111,7 @@ const ProductDetails = () => {
                 {error && <Text color="red.500">{error}</Text>}
                 <FormControl id="rating" mb={4}>
                     <FormLabel>Rating</FormLabel>
-                    <Select value={rating} onChange={(e) => setRating(e.target.value)}>
+                    <Select value={rating} onChange={(e) => setRating(Number(e.target.value))}>
                         <option value="1">1 - Poor</option>
                         <option value="2">2 - Fair</option>
                         <option value="3">3 - Good</option>
