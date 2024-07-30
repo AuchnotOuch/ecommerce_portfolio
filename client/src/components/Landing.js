@@ -1,9 +1,11 @@
+// src/components/Landing.js
 import React, { useEffect, useState } from 'react';
 import { Box, Heading, Text, Button, VStack, SimpleGrid, Image, Link, Tabs, TabList, TabPanels, Tab, TabPanel } from '@chakra-ui/react';
 import { Link as RouterLink, useNavigate } from 'react-router-dom';
 import Slider from 'react-slick';
 import axios from 'axios';
-import { color } from 'framer-motion';
+import TwitterFeed from './TwitterFeed'; // Assuming this component is already created
+import EmailSignup from './EmailSignup'; // Import the new component
 
 const images = [
     "/images/1.webp",
@@ -41,6 +43,7 @@ const Landing = () => {
     const handleExploreClick = () => {
         navigate('/all');
     };
+
     return (
         <Box textAlign="center" py={10} px={6}>
             <Heading color='white' as="h2" size="xl" mb={4}>
@@ -64,23 +67,15 @@ const Landing = () => {
                         {/* <Heading color='white' as="h3" size="md" mb={2}>Follow Us!</Heading> */}
                         <Tabs variant="soft-rounded">
                             <TabList>
-                                <Tab color='white'>FB</Tab>
                                 <Tab color='white'>Twitter</Tab>
-                                <Tab color='white'>Insta</Tab>
-                                <Tab color='white'>TikTok</Tab>
+                                <Tab color='white'>Email Signup</Tab>
                             </TabList>
                             <TabPanels>
                                 <TabPanel>
-                                    <Text>Facebook content goes here...</Text>
+                                    <TwitterFeed /> {/* Replace with your actual Twitter widget component */}
                                 </TabPanel>
                                 <TabPanel>
-                                    <Text>Twitter content goes here...</Text>
-                                </TabPanel>
-                                <TabPanel>
-                                    <Text>Instagram content goes here...</Text>
-                                </TabPanel>
-                                <TabPanel>
-                                    <Text>LinkedIn content goes here...</Text>
+                                    <EmailSignup />
                                 </TabPanel>
                             </TabPanels>
                         </Tabs>

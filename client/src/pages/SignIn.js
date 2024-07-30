@@ -36,7 +36,7 @@ const SignIn = () => {
     };
 
     return (
-        <Box p={6} maxWidth="400px" mx="auto">
+        <Box color='white' p={6} maxWidth="400px" mx="auto">
             <Heading as="h2" size="xl" mb={4}>Sign In</Heading>
             <VStack as="form" spacing={4} align="stretch" onSubmit={handleSubmit}>
                 <Input
@@ -52,7 +52,7 @@ const SignIn = () => {
                     onChange={(e) => setPassword(e.target.value)}
                     required
                 />
-                <Button type="submit" colorScheme="teal" size="lg">Sign In</Button>
+                <Button type="submit" size="lg">Sign In</Button>
                 <Text>
                     Don't have an account? <a href="/signup">Sign Up</a>
                 </Text>

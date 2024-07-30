@@ -46,7 +46,7 @@ const SignUp = () => {
     };
 
     return (
-        <Box maxW="md" mx="auto" mt={10}>
+        <Box color='white' maxW="md" mx="auto" mt={10}>
             <Heading as="h1" mb={6}>Sign Up</Heading>
             <VStack spacing={4} align="stretch">
                 <FormControl id="sign-up-name" mb={4}>
@@ -76,7 +76,7 @@ const SignUp = () => {
                         autoComplete="new-password"
                     />
                 </FormControl>
-                <Button colorScheme="teal" onClick={handleSignUp} isLoading={loading}>
+                <Button onClick={handleSignUp} isLoading={loading}>
                     Sign Up
                 </Button>
             </VStack>
