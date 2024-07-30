@@ -3,6 +3,8 @@ import express from 'express';
 import connectDB from './config/db.js';
 import cors from 'cors';
 import dotenv from 'dotenv';
+import path from 'path'; // Add this line
+
 
 dotenv.config();
 connectDB();
