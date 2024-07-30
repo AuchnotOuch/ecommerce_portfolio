@@ -9,9 +9,12 @@ cd client
 npm install
 npm run build
 
-# Navigate back to root and install backend dependencies
-echo "Installing backend dependencies..."
+# Navigate back to root and move the build folder to the backend
 cd ..
+mv client/build server/build
+
+# Navigate to backend directory and install dependencies
+echo "Installing backend dependencies..."
 cd server
 npm install
 
