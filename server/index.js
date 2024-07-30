@@ -10,6 +10,7 @@ connectDB();
 const app = express();
 
 // Middleware
+app.use(express.static(path.join(__dirname, 'client/build')));
 app.use(cors());
 app.use(express.json());
 
@@ -25,6 +26,10 @@ app.use('/api/products', productRoutes);
 app.use('/api/orders', orderRoutes);
 app.use('/api/reviews', reviewRoutes);
 app.use('/api/cart', cartRoutes);
+
+app.get('*', (req, res) => {
+    res.sendFile(path.join(__dirname + '/client/build/index.html'));
+});
 
 const PORT = process.env.PORT || 5000;
 
