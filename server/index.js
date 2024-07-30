@@ -4,10 +4,14 @@ import connectDB from './config/db.js';
 import cors from 'cors';
 import dotenv from 'dotenv';
 import path from 'path'; // Add this line
+import { fileURLToPath } from 'url';
 
 
 dotenv.config();
 connectDB();
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 const app = express();
 
